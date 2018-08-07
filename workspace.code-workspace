@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "/media/raid1/repo/engintl/page/web"
 		}
 	],
 	"settings": {
