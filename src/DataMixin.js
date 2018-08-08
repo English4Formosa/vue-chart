@@ -1,7 +1,9 @@
 export default {
   data () {
+    let size = 8
     return {
-      values: Array(8).fill(1),
+      size,
+      values: Array(size).fill(1),
       count: 0
     }
   },
@@ -28,14 +30,14 @@ export default {
       let index = Math.floor(Math.random() * this.values.length)
       let insert = Math.floor(Math.random() * 2)
 
-      if (this.values.length <= 10 && insert) {
+      if (this.values.length <= this.size && insert) {
         let front = this.values.slice(0, index)
         let rear = this.values.slice(index + 1)
         let values = front.slice()
         values.push(this.genData())
         values = values.concat(rear)
         this.values = values
-      } else if (this.values.length <= 10) {
+      } else if (this.values.length <= this.size) {
         this.values[index].value = this.genValue()
         this.values = this.values.slice()
       } else {
