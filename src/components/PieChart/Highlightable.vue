@@ -6,10 +6,6 @@ let d3 = require('d3/dist/d3')
 
 export default {
   props: {
-    radius: {
-      type: Number,
-      default: 200
-    },
     width: {
       default: 500
     },
@@ -30,9 +26,16 @@ export default {
   watch: {
     data () {
       this.update()
+    },
+    width () {
+      this.initialize()
+      this.update()
     }
   },
   computed: {
+    radius () {
+      return this.width * 0.9 / 2
+    },
     values () {
       return this.data.map(d => d.value)
     }
@@ -56,14 +59,20 @@ export default {
       this.textArc = d3.arc()
         .outerRadius(this.radius)
         .innerRadius(this.radius / 4)
-      this.svg = d3.select(this.$refs.svg)
 
       this.pie = d3.pie().value(d => {
         return d.value
       })
-      this.svg.append('g')
-        .attr('class', 'chart')
-        .attr('transform', 'translate(' + offset + ',' + offset + ')')
+      if (this.svg) {
+        this.svg.select('g.chart')
+          .attr('class', 'chart')
+          .attr('transform', 'translate(' + offset + ',' + offset + ')')
+      } else {
+        this.svg = d3.select(this.$refs.svg)
+        this.svg.append('g')
+          .attr('class', 'chart')
+          .attr('transform', 'translate(' + offset + ',' + offset + ')')
+      }
       this.vis = this.svg.select('.chart')
     },
     update () {

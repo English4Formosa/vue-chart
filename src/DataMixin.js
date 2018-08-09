@@ -4,7 +4,8 @@ export default {
     return {
       size,
       values: Array(size).fill(1),
-      count: 0
+      count: 0,
+      width: 500
     }
   },
   created () {
@@ -29,6 +30,7 @@ export default {
     update () {
       let index = Math.floor(Math.random() * this.values.length)
       let insert = Math.floor(Math.random() * 2)
+      this.width = Math.ceil(Math.random() * 200 + 300)
 
       if (this.values.length <= this.size && insert) {
         let front = this.values.slice(0, index)

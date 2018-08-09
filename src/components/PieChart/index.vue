@@ -1,6 +1,6 @@
 <template lang="pug">
   div(@click="update")
-    highlightable(:data="data")
+    highlightable(:data="data" :width="width")
 </template>
 <script>
 import Highlightable from './Highlightable'
