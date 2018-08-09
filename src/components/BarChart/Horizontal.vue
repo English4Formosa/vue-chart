@@ -47,10 +47,7 @@ export default {
       return d3.sum(this.values)
     },
     scale () {
-      return d3.scaleLinear().domain([0, this.sum]).range([0, this.sum])
-    },
-    margin () {
-      return this.spacing + ' 0 0 0'
+      return d3.scaleLinear().domain([0, this.sum]).range([0, 100])
     }
   },
   methods: {
