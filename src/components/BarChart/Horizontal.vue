@@ -12,7 +12,7 @@
     color: String // color of the bar
   }
 */
-let d3 = require('d3')
+let d3 = require('d3/dist/d3')
 
 export default {
   props: {

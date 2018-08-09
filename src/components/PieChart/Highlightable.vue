@@ -2,7 +2,7 @@
   svg(ref="svg" :width="width + 'px'" :height="width + 'px'")
 </template>
 <script>
-let d3 = require('d3')
+let d3 = require('d3/dist/d3')
 
 export default {
   props: {
