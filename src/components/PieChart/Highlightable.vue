@@ -16,6 +16,15 @@ export default {
     duration: {
       type: Number,
       default: 1000
+    },
+    fillColor: {
+      default: 'white'
+    },
+    strokeColor: {
+      default: 'red'
+    },
+    textColor: {
+      default: 'black'
     }
   },
   data () {
@@ -78,23 +87,23 @@ export default {
     update () {
       let vis = this.vis
       let offsetArc = this.offsetArc
-      let findText = (datum) => {
+      let find = (selector, datum) => {
         // find text with selected datum
         let key = this.key(datum)
-        return d3.selectAll('g.text')
-          .data(this.pie(this.data))
+        return d3.selectAll(selector)
+          .data(this.pie(this.data), this.key)
           .filter(d => this.key(d) === key)
           .node()
       }
 
       function mouseenter (d) {
-        d3.selectAll([this, findText(d)])
+        d3.selectAll([find('g.slice', d), find('g.text', d)])
           .transition()
           .duration(300)
           .attr('transform', 'translate(' + offsetArc.centroid(d) + ')')
       }
-      function mouseout (d) {
-        d3.selectAll([this, findText(d)])
+      function mouseleave (d) {
+        d3.selectAll([find('g.slice', d), find('g.text', d)])
           .transition()
           .duration(300)
           .attr('transform', 'translate(0, 0)')
@@ -114,13 +123,11 @@ export default {
         .insert('g')
         .classed('slice', true)
         .on('mouseenter', mouseenter)
-        .on('mouseleave', mouseout)
+        .on('mouseleave', mouseleave)
 
       // new arcs
       enters
         .append('path')
-        .attr('fill', 'white')
-        .attr('stroke', 'red')
         .attr('stroke-width', 4)
         .attr('d', this.arc)
 
@@ -129,11 +136,11 @@ export default {
         .data(this.pie(this.data), this.key)
         .select('path')
         .attr('d', this.arc)
+        .attr('fill', this.fillColor)
+        .attr('stroke', this.strokeColor)
 
       // text handling
       vis.selectAll('g.text')
-        .transition()
-        .duration(150)
         .remove()
 
       setTimeout(() => {
@@ -145,8 +152,11 @@ export default {
           .append('text')
           .style('opacity', 0)
           .attr('text-anchor', 'middle')
+          .attr('fill', this.textColor)
           .text(d => d.data.label)
           .attr('transform', d => 'translate(' + this.textArc.centroid(d) + ')')
+          .on('mouseenter', mouseenter)
+          .on('mouseleave', mouseleave)
           .transition()
           .duration(150)
           .style('opacity', 1)

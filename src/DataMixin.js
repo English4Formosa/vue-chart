@@ -1,3 +1,5 @@
+let d3 = require('d3')
+
 export default {
   data () {
     let size = 8
@@ -5,7 +7,10 @@ export default {
       size,
       values: Array(size).fill(1),
       count: 0,
-      width: 500
+      width: 500,
+      strokeColor: 'red',
+      fillColor: 'white',
+      textColor: 'black'
     }
   },
   created () {
@@ -27,10 +32,17 @@ export default {
         label: 'label ' + this.count
       }
     },
+    getColor () {
+      let colorIndex = Math.floor(Math.random() * 10)
+      return d3.schemeCategory10[colorIndex]
+    },
     update () {
       let index = Math.floor(Math.random() * this.values.length)
       let insert = Math.floor(Math.random() * 2)
       this.width = Math.ceil(Math.random() * 200 + 300)
+      this.fillColor = this.getColor()
+      this.strokeColor = this.getColor()
+      this.textColor = this.getColor()
 
       if (this.values.length <= this.size && insert) {
         let front = this.values.slice(0, index)
