@@ -37,7 +37,7 @@ export default {
     update () {
       let index = Math.floor(Math.random() * this.values.length)
       let replace = Math.floor(Math.random() * 2)
-      // this.width = Math.ceil(Math.random() * 200 + 300)
+      this.width = Math.ceil(Math.random() * 200 + 300)
       this.fillColor = this.getColor()
       this.strokeColor = this.getColor()
       this.textColor = this.getColor()

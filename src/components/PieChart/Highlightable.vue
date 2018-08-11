@@ -33,11 +33,7 @@ export default {
     }
   },
   watch: {
-    data () {
-      this.update()
-    },
-    width () {
-      this.initialize()
+    $attrs (to) {
       this.update()
     }
   },
@@ -47,6 +43,24 @@ export default {
     },
     values () {
       return this.data.map(d => d.value)
+    },
+    arc () {
+      return d3.arc()
+        .outerRadius(this.radius)
+        .innerRadius(0)
+    },
+    offsetArc () {
+      return d3.arc()
+        .outerRadius(50)
+        .innerRadius(0)
+    },
+    textArc () {
+      return d3.arc()
+        .outerRadius(this.radius)
+        .innerRadius(this.radius / 4)
+    },
+    offset () {
+      return this.width / 2
     }
   },
   mounted () {
@@ -58,29 +72,14 @@ export default {
       return d.data.key || d.data.label
     },
     initialize () {
-      let offset = this.width / 2
-      this.arc = d3.arc()
-        .outerRadius(this.radius)
-        .innerRadius(0)
-      this.offsetArc = d3.arc()
-        .outerRadius(50)
-        .innerRadius(0)
-      this.textArc = d3.arc()
-        .outerRadius(this.radius)
-        .innerRadius(this.radius / 4)
-
       this.pie = d3.pie().value(d => {
         return d.value
       })
-      if (this.svg) {
-        this.svg.select('g.chart')
-          .attr('class', 'chart')
-          .attr('transform', 'translate(' + offset + ',' + offset + ')')
-      } else {
+      if (!this.svg) {
         this.svg = d3.select(this.$refs.svg)
         this.svg.append('g')
           .attr('class', 'chart')
-          .attr('transform', 'translate(' + offset + ',' + offset + ')')
+          .attr('transform', 'translate(' + this.offset + ',' + this.offset + ')')
         this.vis = this.svg.select('.chart')
         this.slices = this.vis.append('g')
           .attr('class', 'slices')
@@ -149,6 +148,12 @@ export default {
           return arc(i(t))
         }
       }
+
+      this.svg
+        .select('g.chart')
+        .transition()
+        .duration(this.transition)
+        .attr('transform', 'translate(' + this.offset + ',' + this.offset + ')')
 
       // exit
       slices.selectAll('g.slice')
