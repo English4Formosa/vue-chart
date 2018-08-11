@@ -12,9 +12,11 @@
     color: String // color of the bar
   }
 */
+import Coloring from '../../mixins/color/Coloring'
 let d3 = require('d3/dist/d3')
 
 export default {
+  mixins: [Coloring],
   props: {
     data: {
       type: Array,
@@ -58,8 +60,12 @@ export default {
       return d.key || d.label
     },
     initialize () {
-      let labels = d3.select(this.$refs.labels).selectAll('.label').data(this.data, this.key)
-      let bars = d3.select(this.$refs.chart).selectAll('.bar').data(this.data, this.key)
+      let labels = d3.select(this.$refs.labels)
+        .selectAll('.label')
+        .data(this.data, this.key)
+      let bars = d3.select(this.$refs.chart)
+        .selectAll('.bar')
+        .data(this.data, this.key)
 
       // generate bar
       bars.enter()
@@ -82,18 +88,20 @@ export default {
       let labels = d3.select(this.$refs.labels).selectAll('.label').data(this.data, this.key)
       let bars = d3.select(this.$refs.chart).selectAll('.bar').data(this.data, this.key)
 
+      // chart coloring
+      d3.select(this.$refs.chart)
+        .transition()
+        .duration(this.duration)
+        .style('border-color', this.stroke)
       // generate bar
+      bars.enter()
+        .append('div')
+        .classed('bar', true)
+        .style('width', '0')
       bars
         .transition()
         .duration(this.duration)
-        .style('width', this.width.bind(this))
-      bars.enter()
-        .append('div')
-        .attr('class', this.barClass)
-        .classed('bar', true)
-        .style('width', '0')
-        .transition()
-        .duration(this.duration)
+        .style('background-color', this.fill)
         .style('width', this.width.bind(this))
       bars.exit()
         .remove()
@@ -102,10 +110,16 @@ export default {
       labels.enter()
         .append('p')
         .attr('class', this.labelClass)
+        .style('color', 'white')
         .classed('label', true)
         .text(d => d.label)
+
+      d3.select(this.$refs.labels)
+        .selectAll('.label')
+        .data(this.data, this.key)
         .transition()
-        .duration(this.duration / 4)
+        .duration(this.duration)
+        .style('color', this.textColor)
 
       labels.exit()
         .remove()
@@ -135,5 +149,4 @@ export default {
       flex: 0 0 70%
       border-style: solid
       border-width: 0px 0px 3px 3px
-      border-color: black
 </style>

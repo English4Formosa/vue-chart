@@ -1,6 +1,6 @@
 <template lang="pug">
   div(@click="update")
-    horizontal(:data="data")
+    horizontal(:data="data" :fill="fillColor" :stroke="strokeColor" :text-color="textColor")
 </template>
 <script>
 import Horizontal from './Horizontal'
@@ -16,7 +16,6 @@ export default {
 <style lang="stylus">
   .horizontal-bar-chart
     .bar
-      background-color: black
       height: 30px
       margin-top: 10px
     .label

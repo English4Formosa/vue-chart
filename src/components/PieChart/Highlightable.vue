@@ -3,8 +3,10 @@
 </template>
 <script>
 let d3 = require('d3/dist/d3')
+import Coloring from '../../mixins/color/Coloring'
 
 export default {
+  mixins: [Coloring],
   props: {
     width: {
       default: 500
@@ -16,15 +18,6 @@ export default {
     transition: {
       type: Number,
       default: 1000
-    },
-    textColor: {
-      default: 'black'
-    },
-    fill: {
-      default: 'white'
-    },
-    stroke: {
-      default: 'grey'
     }
   },
   data () {
