@@ -7,14 +7,17 @@ export default {
       size,
       values: Array(size).fill(1),
       count: 0,
-      width: 500,
+      width: 0,
       strokeColor: 'red',
       fillColor: 'grey',
       textColor: 'black'
     }
   },
   created () {
-    this.values = this.values.map(this.genData.bind(this))
+    setTimeout(() => {
+      this.values = this.values.map(this.genData.bind(this))
+      this.width = 500
+    }, 1000)
   },
   computed: {
     data () {
