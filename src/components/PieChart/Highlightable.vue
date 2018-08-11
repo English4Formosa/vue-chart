@@ -183,11 +183,11 @@ export default {
       slices.selectAll('g.slice')
         .data(this.pie(this.data), this.key)
         .select('path')
-        .attr('stroke', this.stroke)
         .transition()
         .duration(this.transition / 2)
         .attrTween('d', arcTween)
-        .attr('fill', this.fill)
+        .attr('stroke', this.colors.stroke)
+        .attr('fill', this.colors.fill)
       this.highlight(this.pie(this.data).filter(d => this.highlights.has(this.key(d))))
       this.unhighlight(this.pie(this.data))
 
@@ -214,7 +214,7 @@ export default {
         .select('text')
         .transition()
         .duration(this.transition)
-        .attr('fill', this.textColor)
+        .attr('fill', this.colors.text)
         .attr('transform', d => 'translate(' + this.textArc.centroid(d) + ')')
         .style('opacity', 1)
     }
