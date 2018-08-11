@@ -2,8 +2,8 @@
   svg(ref="svg" :width="width + 'px'" :height="width + 'px'")
 </template>
 <script>
-let d3 = require('d3/dist/d3')
 import Coloring from '../../mixins/color/Coloring'
+let d3 = require('d3/dist/d3')
 
 export default {
   mixins: [Coloring],
@@ -100,6 +100,7 @@ export default {
           .duration(300)
           .attr('transform', 'translate(' + offsetArc.centroid(d) + ')')
       }
+
       function mouseleave (d) {
         d3.selectAll([find('g.slice', d), find('g.text', d)])
           .transition()
@@ -165,7 +166,6 @@ export default {
         .attr('fill', this.textColor)
         .attr('transform', d => 'translate(' + this.textArc.centroid(d) + ')')
         .style('opacity', 1)
-
     }
   }
 }
