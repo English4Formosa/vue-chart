@@ -82,6 +82,7 @@ export default {
       }
     },
     update () {
+      let arc = this.arc
       let slices = this.slices
       let texts = this.texts
       let offsetArc = this.offsetArc
@@ -106,6 +107,19 @@ export default {
           .transition()
           .duration(this.transition)
           .attr('transform', 'translate(0, 0)')
+      }
+      function arcTween (d) {
+        let data = this._data
+        let i
+        this._data = d
+        if (!data) {
+          data = Object.assign({}, d)
+          data.endAngle = data.startAngle
+        }
+        i = d3.interpolate(data, d)
+        return function (t) {
+          return arc(i(t))
+        }
       }
 
       // exit
@@ -138,7 +152,7 @@ export default {
         .attr('stroke', this.stroke)
         .transition()
         .duration(this.transition / 2)
-        .attr('d', this.arc)
+        .attrTween('d', arcTween)
         .attr('fill', this.fill)
 
       // text handling
