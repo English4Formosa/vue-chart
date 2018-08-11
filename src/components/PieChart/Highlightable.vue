@@ -123,14 +123,14 @@ export default {
 
       let mouseenter = (d) => {
         this.highlight(d)
-        this.$emit(this.key(d))
+        this.$emit('mouseenter', d.data)
       }
 
       let mouseleave = (d) => {
         if (!this.highlights.has(this.key(d))) {
           this.unhighlight(d)
         }
-        this.$emit(this.key(d))
+        this.$emit('mouseleave', d.data)
       }
       let click = (d) => {
         this.$emit('click', d.data)
