@@ -9,7 +9,7 @@ export default {
       count: 0,
       width: 500,
       strokeColor: 'red',
-      fillColor: 'white',
+      fillColor: 'grey',
       textColor: 'black'
     }
   },

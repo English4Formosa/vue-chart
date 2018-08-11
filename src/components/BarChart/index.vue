@@ -13,13 +13,3 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
-  .horizontal-bar-chart
-    .bar
-      height: 30px
-      margin-top: 10px
-    .label
-      line-height: 30px
-      margin: 10px 10px 0 0
-      text-align: right
-</style>

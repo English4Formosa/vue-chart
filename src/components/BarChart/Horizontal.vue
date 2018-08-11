@@ -25,6 +25,14 @@ export default {
     duration: {
       type: Number,
       default: 1000
+    },
+    spacing: {
+      type: Number,
+      default: 10
+    },
+    height: {
+      type: Number,
+      default: 30
     }
   },
   data () {
@@ -34,6 +42,7 @@ export default {
   },
   mounted () {
     this.initialize()
+    this.update()
     this.initialized = true
   },
   watch: {
@@ -72,7 +81,10 @@ export default {
         .append('div')
         .attr('class', d => d.class)
         .classed('bar', true)
+        .style('background-color', this.fill)
         .style('width', '0')
+        .style('height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
         .transition()
         .duration(this.duration)
         .style('width', this.width.bind(this))
@@ -83,6 +95,10 @@ export default {
         .attr('class', d => d.class)
         .classed('label', true)
         .text(d => d.label)
+        .style('color', this.textColor)
+        .style('font-size', this.height * 0.8 + 'px')
+        .style('line-height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
     },
     update () {
       let labels = d3.select(this.$refs.labels).selectAll('.label').data(this.data, this.key)
@@ -93,23 +109,41 @@ export default {
         .transition()
         .duration(this.duration)
         .style('border-color', this.stroke)
+
       // generate bar
       bars.enter()
         .append('div')
         .classed('bar', true)
         .style('width', '0')
-      bars
+        .style('height', '0')
+        .style('margin-top', '0')
+      d3.select(this.$refs.chart)
+        .selectAll('.bar')
+        .data(this.data, this.key)
         .transition()
         .duration(this.duration)
         .style('background-color', this.fill)
         .style('width', this.width.bind(this))
+        .style('height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
+
       bars.exit()
+        .style('height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
+        .transition()
+        .duration(this.duration)
+        .style('height', '0px')
+        .style('margin-top', '0px')
+        .style('background-color', 'white')
         .remove()
 
       // generate label
       labels.enter()
         .append('p')
         .attr('class', this.labelClass)
+        .style('line-height', '0')
+        .style('font-size', '0')
+        .style('line-height', '0')
         .style('color', 'white')
         .classed('label', true)
         .text(d => d.label)
@@ -120,8 +154,20 @@ export default {
         .transition()
         .duration(this.duration)
         .style('color', this.textColor)
+        .style('font-size', this.height * 0.8 + 'px')
+        .style('line-height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
 
       labels.exit()
+        .style('line-height', this.height + 'px')
+        .style('margin-top', this.spacing + 'px')
+        .style('font-size', this.height * 0.8 + 'px')
+        .transition()
+        .duration(this.duration)
+        .style('font-size', '0px')
+        .style('line-height', '0px')
+        .style('margin-top', '0px')
+        .style('color', 'white')
         .remove()
     }
   }
@@ -141,6 +187,9 @@ export default {
       display: flex
       position: relative
       flex-direction: column
+      > *
+        padding: 0
+        margin: 0
     .labels
       flex: 0 0 30%
       .label
