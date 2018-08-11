@@ -146,11 +146,11 @@ export default {
         .style('line-height', '0')
         .style('color', 'white')
         .classed('label', true)
-        .text(d => d.label)
 
       d3.select(this.$refs.labels)
         .selectAll('.label')
         .data(this.data, this.key)
+        .text(d => d.label)
         .transition()
         .duration(this.duration)
         .style('color', this.textColor)

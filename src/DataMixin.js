@@ -45,16 +45,19 @@ export default {
       this.textColor = this.getColor()
 
       if (this.values.length <= this.size && insert) {
+        // insert
         let front = this.values.slice(0, index)
-        let rear = this.values.slice(index + 1)
+        let rear = this.values.slice(index)
         let values = front.slice()
         values.push(this.genData())
         values = values.concat(rear)
         this.values = values
       } else if (this.values.length <= this.size) {
+        // replace
         this.values[index].value = this.genValue()
         this.values = this.values.slice()
       } else {
+        // delete
         let front = this.values.slice(0, index)
         let rear = this.values.slice(index + 1)
         let values = front.slice()
