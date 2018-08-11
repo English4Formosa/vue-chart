@@ -18,6 +18,13 @@ export default {
     transition: {
       type: Number,
       default: 1000
+    },
+    highlights: {
+      type: Set,
+      required: false,
+      default () {
+        return new Set()
+      }
     }
   },
   data () {
@@ -81,33 +88,54 @@ export default {
           .attr('class', 'texts')
       }
     },
+    find (selector, datum) {
+      let keys = new Set(datum.map(this.key))
+
+      // find text with selected datum
+      return this.svg.selectAll(selector)
+        .data(this.pie(this.data), this.key)
+        .filter(d => keys.has(this.key(d)))
+        .nodes()
+    },
+    highlight (datum) {
+      if (!(datum instanceof Array)) {
+        datum = [datum]
+      }
+      d3.selectAll([...this.find('g.slice', datum), ...this.find('g.text', datum)])
+        .transition()
+        .duration(300)
+        .attr('transform', d => 'translate(' + this.offsetArc.centroid(d) + ')')
+    },
+    unhighlight (datum) {
+      if (!(datum instanceof Array)) {
+        datum = [datum]
+      }
+      datum = datum.filter(d => !this.highlights.has(this.key(d)))
+      d3.selectAll([...this.find('g.slice', datum), ...this.find('g.text', datum)])
+        .transition()
+        .duration(300)
+        .attr('transform', 'translate(0, 0)')
+    },
     update () {
       let arc = this.arc
       let slices = this.slices
       let texts = this.texts
-      let offsetArc = this.offsetArc
-      let find = (selector, datum) => {
-        // find text with selected datum
-        let key = this.key(datum)
-        return d3.selectAll(selector)
-          .data(this.pie(this.data), this.key)
-          .filter(d => this.key(d) === key)
-          .node()
+
+      let mouseenter = (d) => {
+        this.highlight(d)
+        this.$emit(this.key(d))
       }
 
-      function mouseenter (d) {
-        d3.selectAll([find('g.slice', d), find('g.text', d)])
-          .transition()
-          .duration(300)
-          .attr('transform', 'translate(' + offsetArc.centroid(d) + ')')
+      let mouseleave = (d) => {
+        if (!this.highlights.has(this.key(d))) {
+          this.unhighlight(d)
+        }
+        this.$emit(this.key(d))
+      }
+      let click = (d) => {
+        this.$emit('click', d.data)
       }
 
-      function mouseleave (d) {
-        d3.selectAll([find('g.slice', d), find('g.text', d)])
-          .transition()
-          .duration(this.transition)
-          .attr('transform', 'translate(0, 0)')
-      }
       function arcTween (d) {
         let data = this._data
         let i
@@ -137,6 +165,7 @@ export default {
         .classed('slice', true)
         .on('mouseenter', mouseenter)
         .on('mouseleave', mouseleave)
+        .on('click', click)
 
       // new arcs
       enters
@@ -154,6 +183,8 @@ export default {
         .duration(this.transition / 2)
         .attrTween('d', arcTween)
         .attr('fill', this.fill)
+      this.highlight(this.pie(this.data).filter(d => this.highlights.has(this.key(d))))
+      this.unhighlight(this.pie(this.data))
 
       // text handling
       texts.selectAll('g.text')
@@ -172,6 +203,7 @@ export default {
         .text(d => d.data.label)
         .on('mouseenter', mouseenter)
         .on('mouseleave', mouseleave)
+        .on('click', click)
       texts.selectAll('g.text')
         .data(this.pie(this.data), this.key)
         .select('text')
