@@ -13,18 +13,18 @@ export default {
       type: Array,
       required: true
     },
-    duration: {
+    transition: {
       type: Number,
       default: 1000
     },
-    fillColor: {
-      default: 'white'
-    },
-    strokeColor: {
-      default: 'red'
-    },
     textColor: {
       default: 'black'
+    },
+    fill: {
+      default: 'white'
+    },
+    stroke: {
+      default: 'grey'
     }
   },
   data () {
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     radius () {
-      return this.width * 0.9 / 2
+      return this.width * 0.8 / 2
     },
     values () {
       return this.data.map(d => d.value)
@@ -81,11 +81,16 @@ export default {
         this.svg.append('g')
           .attr('class', 'chart')
           .attr('transform', 'translate(' + offset + ',' + offset + ')')
+        this.vis = this.svg.select('.chart')
+        this.slices = this.vis.append('g')
+          .attr('class', 'slices')
+        this.texts = this.vis.append('g')
+          .attr('class', 'texts')
       }
-      this.vis = this.svg.select('.chart')
     },
     update () {
-      let vis = this.vis
+      let slices = this.slices
+      let texts = this.texts
       let offsetArc = this.offsetArc
       let find = (selector, datum) => {
         // find text with selected datum
@@ -105,18 +110,18 @@ export default {
       function mouseleave (d) {
         d3.selectAll([find('g.slice', d), find('g.text', d)])
           .transition()
-          .duration(300)
+          .duration(this.transition)
           .attr('transform', 'translate(0, 0)')
       }
 
       // exit
-      vis.selectAll('g.slice')
+      slices.selectAll('g.slice')
         .data(this.pie(this.data), this.key)
         .exit()
         .remove()
 
       // new
-      let enters = vis
+      let enters = slices
         .selectAll('g.slice')
         .data(this.pie(this.data), this.key)
         .enter()
@@ -130,37 +135,44 @@ export default {
         .append('path')
         .attr('stroke-width', 4)
         .attr('d', this.arc)
+        .attr('fill', 'white')
 
       // exit
-      vis.selectAll('g.slice')
+      slices.selectAll('g.slice')
         .data(this.pie(this.data), this.key)
         .select('path')
+        .attr('stroke', this.stroke)
+        .transition()
+        .duration(this.transition / 2)
         .attr('d', this.arc)
-        .attr('fill', this.fillColor)
-        .attr('stroke', this.strokeColor)
+        .attr('fill', this.fill)
 
       // text handling
-      vis.selectAll('g.text')
+      texts.selectAll('g.text')
+        .data(this.pie(this.data), this.key)
+        .exit()
         .remove()
 
-      setTimeout(() => {
-        vis.selectAll('g.text')
-          .data(this.pie(this.data), this.key)
-          .enter()
-          .append('g')
-          .classed('text', true)
-          .append('text')
-          .style('opacity', 0)
-          .attr('text-anchor', 'middle')
-          .attr('fill', this.textColor)
-          .text(d => d.data.label)
-          .attr('transform', d => 'translate(' + this.textArc.centroid(d) + ')')
-          .on('mouseenter', mouseenter)
-          .on('mouseleave', mouseleave)
-          .transition()
-          .duration(150)
-          .style('opacity', 1)
-      }, 300)
+      texts.selectAll('g.text')
+        .data(this.pie(this.data), this.key)
+        .enter()
+        .append('g')
+        .classed('text', true)
+        .append('text')
+        .style('opacity', 0)
+        .attr('text-anchor', 'middle')
+        .text(d => d.data.label)
+        .on('mouseenter', mouseenter)
+        .on('mouseleave', mouseleave)
+      texts.selectAll('g.text')
+        .data(this.pie(this.data), this.key)
+        .select('text')
+        .transition()
+        .duration(this.transition)
+        .attr('fill', this.textColor)
+        .attr('transform', d => 'translate(' + this.textArc.centroid(d) + ')')
+        .style('opacity', 1)
+
     }
   }
 }
