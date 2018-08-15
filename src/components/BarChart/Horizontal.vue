@@ -192,10 +192,9 @@ export default {
         padding: 0
         margin: 0
     .labels
-      flex: 0 0 30%
       .label
         display: inline-block
     .chart
-      flex: 0 0 70%
+      flex-grow: 1
       border-style: solid
 </style>
