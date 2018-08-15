@@ -1,7 +1,7 @@
 <template lang="pug">
   div.horizontal-bar-chart
-    div.labels(ref="labels")
-    div.chart(ref="chart" key="chart")
+    div.labels.text-xs-right(ref="labels")
+    div.chart(ref="chart" key="chart" :style="{'border-width': '0 0 ' + this.strokeWidth + 'px ' + this.strokeWidth + 'px'}")
 </template>
 <script>
 /*
@@ -99,6 +99,7 @@ export default {
         .style('font-size', this.height * 0.8 + 'px')
         .style('line-height', this.height + 'px')
         .style('margin-top', this.spacing + 'px')
+        .style('padding-right', '20px')
     },
     update () {
       let labels = d3.select(this.$refs.labels).selectAll('.label').data(this.data, this.key)
@@ -197,5 +198,4 @@ export default {
     .chart
       flex: 0 0 70%
       border-style: solid
-      border-width: 0px 0px 3px 3px
 </style>

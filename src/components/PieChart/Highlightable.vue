@@ -175,7 +175,7 @@ export default {
       // new arcs
       enters
         .append('path')
-        .attr('stroke-width', 4)
+        .attr('stroke-width', this.strokeWidth)
         .attr('d', this.arc)
         .attr('fill', 'white')
 

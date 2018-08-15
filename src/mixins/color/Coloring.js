@@ -8,6 +8,9 @@ export default {
     },
     stroke: {
       default: 'grey'
+    },
+    strokeWidth: {
+      default: 2
     }
   },
   computed: {
