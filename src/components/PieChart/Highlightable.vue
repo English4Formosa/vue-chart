@@ -25,6 +25,10 @@ export default {
       default () {
         return new Set()
       }
+    },
+    paddingRatio: {
+      type: Number,
+      default: 0.8
     }
   },
   data () {
@@ -39,7 +43,7 @@ export default {
   },
   computed: {
     radius () {
-      return this.width * 0.8 / 2
+      return this.width * this.paddingRatio / 2
     },
     values () {
       return this.data.map(d => d.value)
