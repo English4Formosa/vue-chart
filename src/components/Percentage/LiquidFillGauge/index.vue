@@ -18,6 +18,11 @@ export default {
       gauge: false
     }
   },
+  watch: {
+    value () {
+      this.update()
+    }
+  },
   mounted () {
     this.initialize()
   },
@@ -29,12 +34,20 @@ export default {
       config1.waveTextColor = '#FFAAAA'
       config1.waveColor = '#FFDDDD'
       config1.circleThickness = 0.2
-      config1.textVertPosition = 0.2
+      config1.textVertPosition = 0.5
       config1.waveAnimateTime = 1000
       Object.assign(config1, this.$attrs)
       this.gauge = loadLiquidFillGauge(this.id, this.value, config1)
     },
-    update () {}
+    update () {
+      this.gauge.update(this.value)
+    },
+    stop () {
+      this.gauge.stop()
+    }
+  },
+  beforeDestroy () {
+    this.stop()
   }
 }
 </script>

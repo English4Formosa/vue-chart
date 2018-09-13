@@ -43,6 +43,7 @@ export function loadLiquidFillGauge (elementId, value, config) {
   var locationX = parseInt(gauge.style('width')) / 2 - radius
   var locationY = parseInt(gauge.style('height')) / 2 - radius
   var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value)) / config.maxValue
+  let run = true
 
   var waveHeightScale
   if (config.waveHeightScaling) {
@@ -211,6 +212,9 @@ export function loadLiquidFillGauge (elementId, value, config) {
   if (config.waveAnimate) animateWave()
 
   function animateWave () {
+    if (!run) {
+      return
+    }
     wave.attr('transform', 'translate(' + waveAnimateScale(wave.attr('T')) + ',0)')
     wave.transition()
       .duration(config.waveAnimateTime * (1 - wave.attr('T')))
@@ -224,6 +228,9 @@ export function loadLiquidFillGauge (elementId, value, config) {
   }
 
   function GaugeUpdater () {
+    this.stop = function () {
+      run = false
+    }
     this.update = function (value) {
       var newFinalValue = parseFloat(value).toFixed(2)
       var textRounderUpdater = function (value) {
@@ -244,7 +251,7 @@ export function loadLiquidFillGauge (elementId, value, config) {
         var i = d3.interpolate(this.textContent, parseFloat(value).toFixed(2))
         return function (t) {
           this.textContent = textRounderUpdater(i(t)) + percentText
-        }
+        }.bind(this)
       }
 
       text1.transition()
