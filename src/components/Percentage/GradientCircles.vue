@@ -14,7 +14,7 @@ export default {
       type: String,
       required: true
     },
-    emptyColor: {
+    colorEmpty: {
       type: String,
       default: 'grey'
     },
@@ -63,7 +63,7 @@ export default {
     getColor (d) {
       console.log(d, this.progress)
       if (d > this.progress) {
-        return this.emptyColor
+        return this.colorEmpty
       } else {
         return this.color(d)
       }
