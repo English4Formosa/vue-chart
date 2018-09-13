@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     getColor (d) {
-      console.log(d, this.progress)
       if (d > this.progress) {
         return this.colorEmpty
       } else {
