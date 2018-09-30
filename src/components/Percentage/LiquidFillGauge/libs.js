@@ -293,7 +293,7 @@ export function loadLiquidFillGauge (elementId, value, config) {
         .duration(0)
         .transition()
         .duration(config.waveAnimate ? (config.waveAnimateTime * (1 - wave.attr('T'))) : (config.waveRiseTime))
-        .ease('linear')
+        .ease(d3.easeLinear)
         .attr('d', newClipArea)
         .attr('transform', 'translate(' + newWavePosition + ',0)')
         .attr('T', '1')
