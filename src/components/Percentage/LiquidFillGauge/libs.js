@@ -297,7 +297,7 @@ export function loadLiquidFillGauge (elementId, value, config) {
         .attr('d', newClipArea)
         .attr('transform', 'translate(' + newWavePosition + ',0)')
         .attr('T', '1')
-        .each('end', function () {
+        .on('end', function () {
           if (config.waveAnimate) {
             wave.attr('transform', 'translate(' + waveAnimateScale(0) + ',0)')
             animateWave(config.waveAnimateTime)
