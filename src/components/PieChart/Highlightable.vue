@@ -11,6 +11,15 @@ export default {
     width: {
       default: 500
     },
+    /*
+      format:
+        {
+          key: string,
+          label: string,
+          value: number,
+          color: string
+        }[]
+    */
     data: {
       type: Array,
       required: true
